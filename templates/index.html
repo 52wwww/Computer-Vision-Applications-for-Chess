@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>棋盘识别Web</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background: #f4f6fa; }
+        .main-container { max-width: 1200px; margin: 10px auto; padding: 24px; background: #fff; border-radius: 18px; box-shadow: 0 4px 24px #0001; }
+        .upload-card { max-width: 520px; margin: 0 auto 32px auto; }
+        .result-row { display: flex; flex-wrap: wrap; gap: 32px; justify-content: center; align-items: flex-start; }
+        .result-img { background: #fafbfc; border-radius: 12px; box-shadow: 0 2px 8px #0001; padding: 18px; max-width: 420px; text-align: center; }
+        .result-img img { max-width: 100%; border-radius: 8px; border: 1px solid #eee; }
+        .result-card { background: #fafbfc; border-radius: 12px; box-shadow: 0 2px 8px #0001; padding: 24px; max-width: 420px; }
+        .result-title { font-size: 1.2em; font-weight: bold; margin-bottom: 10px; }
+        .result-list { list-style: none; padding: 0; margin: 0; }
+        .result-list li { margin: 8px 0; font-size: 1em; display: flex; align-items: center; }
+        .icon-success { color: #198754; margin-right: 8px; }
+        .icon-fail { color: #dc3545; margin-right: 8px; }
+        .success-message { color: #198754; font-weight: bold; }
+        .error-message { color: #dc3545; font-weight: bold; }
+        .piece-table { margin-top: 18px; }
+        @media (max-width: 900px) {
+            .result-row { flex-direction: column; align-items: center; }
+            .result-img, .result-card { min-width: 220px; max-width: 98vw; }
+        }
+        .white-move { color: #198754; font-weight: bold; }
+        .black-move { color: #0d6efd; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <div class="upload-card card shadow-sm p-4 mb-4 bg-body rounded">
+            <h2 class="mb-3 text-center">上传棋盘图片</h2>
+            <form method="post" enctype="multipart/form-data" class="d-flex flex-row align-items-center">
+                <input type="file" name="image" required class="form-control" style="max-width:300px;">
+                <button type="submit" class="btn btn-primary mx-4 px-4">识别</button>
+            </form>
+            {% if error %}
+                <div class="alert alert-danger mt-3 text-center">{{ error }}</div>
+            {% endif %}
+        </div>
+        {% if image_url %}
+        <div class="result-card mx-auto mb-4" style="max-width:340px;">
+            <div class="result-title">功能执行结果：</div>
+            <ul class="result-list">
+                <li>{% if results.board_detected %}<span class="icon-success">✔</span>{% else %}<span class="icon-fail">✖</span>{% endif %}识别棋盘：{% if results.board_detected %}成功{% else %}失败{% endif %}</li>
+                <li>{% if results.pieces_detected %}<span class="icon-success">✔</span>{% else %}<span class="icon-fail">✖</span>{% endif %}识别棋子：{% if results.pieces_detected %}成功{% else %}失败{% endif %}</li>
+            </ul>
+            <div class="mt-2">识别到的棋子总数：<span class="fw-bold">{{ results.piece_count }}</span></div>
+            {% if best_move_white %}
+            <div class="mt-2 white-move">白方推荐走法：<span class="fw-bold">{{ best_move_white }}</span></div>
+            {% endif %}
+            {% if best_move_black %}
+            <div class="mt-2 black-move">黑方推荐走法：<span class="fw-bold">{{ best_move_black }}</span></div>
+            {% endif %}
+            {% if fen %}
+            <div class="mt-2" style="word-break:break-all;">FEN串：<span class="text-secondary">{{ fen }}</span></div>
+            {% endif %}
+        </div>
+        <div class="result-row" style="gap:18px; justify-content:center; flex-wrap:wrap;">
+            <div class="result-img" style="max-width:320px;">
+                <img src="{{ image_url }}" style="max-width:100%;">
+            </div>
+            <div class="result-img" style="max-width:320px;">
+                {% if chessboard_url %}
+                <!-- <div class="mt-2">二维棋盘复原：</div> -->
+                <img src="{{ chessboard_url }}" style="max-width:100%; border-radius:8px; border:1px solid #eee;">
+                {% endif %}
+            </div>
+        </div>
+        {% if positions %}
+        <div class="result-card mx-auto mb-4" style="max-width:520px;">
+            <div class="result-title">棋子详细信息：</div>
+            <div class="table-responsive">
+            <table class="table table-bordered piece-table">
+                <thead><tr><th>类别</th><th>行</th><th>列</th><th>棋盘坐标</th></tr></thead>
+                <tbody>
+                {% for p in positions %}
+                <tr>
+                    <td>{{ p.piece }}</td>
+                    <td>{{ p.row }}</td>
+                    <td>{{ p.col }}</td>
+                    <td>{{ p.chess_coord }}</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            </div>
+        </div>
+        {% endif %}
+        {% endif %}
+    </div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,5 @@
+train: ./images/train
+val: ./images/val
+ 
+nc: 12
+names: ["K","Q","R","B","N","P","k","q","r","b","n","p"] 
