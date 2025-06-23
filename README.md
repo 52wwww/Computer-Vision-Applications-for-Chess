@@ -1,7 +1,7 @@
 # 棋盘与棋子识别Web应用
 # Computer-Vision-Applications-for-Chess
 This is our group's final project for the Computer Vision course in the spring semester of 2025.
-## B站视频链接：
+## B站视频链接：https://www.bilibili.com/video/BV1DiKazzED6/?spm_id_from=333.1007.top_right_bar_window_history.content.click
 ## 功能
 - 识别棋盘
 - 识别棋盘上的棋子
