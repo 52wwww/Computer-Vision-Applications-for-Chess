@@ -1,5 +1,8 @@
 # 棋盘与棋子识别Web应用
-
+=======
+# Computer-Vision-Applications-for-Chess
+This is our group's final project for the Computer Vision course in the spring semester of 2025.
+B站视频链接：
 ## 功能
 - 识别棋盘
 - 识别棋盘上的棋子
@@ -14,7 +17,7 @@
    ```
 
 2. 准备模型
-   - 用你的数据集训练yolov8模型，得到`best.pt`，放到`chess(DST1535)/`目录下。
+   - 用你的数据集训练yolov8模型，得到`best.pt`，放到rectified_dataset目录下。
 
 ## 运行
 
@@ -73,5 +76,6 @@ pip install -i https://pypi.tuna.tsinghua.edu.cn/simple -r requirements.txt
 python app.py
 ```
 2. 上传棋盘图片，识别并获得AI推荐走法。
+
 
 
